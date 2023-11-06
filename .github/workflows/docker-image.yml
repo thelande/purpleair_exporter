@@ -26,5 +26,4 @@ jobs:
       with:
         context: .
         push: false
-        platforms: linux/amd64,linux/arm64
-        tags: thelande/purpleair_exporter:$(date +%s)
+        platforms: linux/amd64,linux/arm64:latest
