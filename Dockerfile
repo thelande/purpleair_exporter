@@ -1,18 +1,21 @@
 FROM --platform=${BUILDPLATFORM} golang:1.21-alpine AS builder
 LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
 
-WORKDIR /app
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
 
-RUN set -eux; \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build .
+ARG TARGETOS TARGETARCH
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o purpleair_exporter .
 
-FROM --platform=${BUILDPLATFORM} alpine:3.18.4
+FROM alpine:3.18.4
 LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
 
 WORKDIR /app
 
-COPY --from=builder /app/purpleair_exporter .
+COPY --from=builder /src/purpleair_exporter .
 
 EXPOSE 9811
 
