@@ -1,15 +1,12 @@
-FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
+FROM --platform=${BUILDPLATFORM} golang:1.21-alpine AS builder
 LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
-
-ARG GOOS="linux" \
-    GOARCH="amd64"
 
 WORKDIR /app
 COPY . .
 
-RUN GOOS=${GOOS} GOARCH=${GOARCH} go build .
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build .
 
-FROM --platform=$BUILDPLATFORM alpine:3.18.4
+FROM --platform=${BUILDPLATFORM} alpine:3.18.4
 LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
 
 WORKDIR /app
