@@ -4,7 +4,8 @@ LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
 WORKDIR /app
 COPY . .
 
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build .
+RUN set -eux; \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build .
 
 FROM --platform=${BUILDPLATFORM} alpine:3.18.4
 LABEL maintainer="Tom Helander <thomas.helander@gmail.com>"
